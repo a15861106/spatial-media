@@ -2,37 +2,37 @@
 
 A tool for manipulating spatial media ([spherical video])
 This is a port from the python scripts provided by google to C++ by Varol Okan
-Support iOS、Android by cievon
+and support iOS、Android by cievon
 
 It can be used to inject spatial media metadata into a file or validate 
 metadata in an existing file.
 
 ## Usage
 
-```SpatialMedia::Parser parser;
-  parser.getInFile = "input file";
-    parser.getOutFile = "output file";
-  if ( parser.getInFile ( ) == "" )  {
-    cout << "Please provide an input file." << endl;
-    exit ( -1 );
-  }
-
-  Utils utils;
-  if ( parser.getInject ( ) )  {
-    if ( parser.getOutFile ( ) == "" )  {
-      cout << "Injecting metadata requires both input and output file." << endl;
-      exit ( -2 );
-    }
-    Metadata md;
-    std::string &strVideoXML = utils.generate_spherical_xml ( parser.getStereoMode ( ), parser.getCrop ( ) );
-    md.setVideoXML ( strVideoXML );
-    if ( parser.getSpatialAudio ( ) )
-      md.setAudio ( &g_DefAudioMetadata );
-    if ( strVideoXML.length ( ) > 1 )
-      utils.inject_metadata ( parser.getInFile ( ), parser.getOutFile ( ), &md );
-    else
-      cout << "Failed to generate metadata." << endl;
-  }```
+    SpatialMedia::Parser parser;
+      parser.getInFile = "input file";
+        parser.getOutFile = "output file";
+      if ( parser.getInFile ( ) == "" )  {
+        cout << "Please provide an input file." << endl;
+        exit ( -1 );
+      }
+      
+      Utils utils;
+      if ( parser.getInject ( ) )  {
+        if ( parser.getOutFile ( ) == "" )  {
+          cout << "Injecting metadata requires both input and output file." << endl;
+          exit ( -2 );
+        }
+        Metadata md;
+        std::string &strVideoXML = utils.generate_spherical_xml ( parser.getStereoMode ( ), parser.getCrop ( ) );
+        md.setVideoXML ( strVideoXML );
+        if ( parser.getSpatialAudio ( ) )
+          md.setAudio ( &g_DefAudioMetadata );
+        if ( strVideoXML.length ( ) > 1 )
+          utils.inject_metadata ( parser.getInFile ( ), parser.getOutFile ( ), &md );
+        else
+          cout << "Failed to generate metadata." << endl;
+      }
 
 ##### --stereo
 
