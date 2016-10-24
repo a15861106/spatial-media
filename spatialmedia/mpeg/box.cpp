@@ -167,7 +167,7 @@ void Box::writeUint64 ( std::fstream &fs, uint64_t iVal )
     uint64_t iVal;
     char bytes[8];
   } buf;
-  buf.iVal = htobe32 ( iVal );
+  buf.iVal = htobe64 ( iVal );
   fs.write ( (char *)buf.bytes, 8 );
 }
 
@@ -242,7 +242,7 @@ void Box::save ( std::fstream &fsIn, std::fstream &fsOut, int32_t iDelta )
   // Save box contents prioritizing set contents.
   // iDelta = index update amount
   if ( m_iHeaderSize == 16 )  {
-    uint64_t iBigSize = htobe64 ( (uint64_t)size ( ) );
+    uint64_t iBigSize = size ( );
     writeUint32 ( fsOut, 1 );
     fsOut.write ( m_name,4 );
     writeUint64 ( fsOut, iBigSize );
@@ -251,6 +251,7 @@ void Box::save ( std::fstream &fsIn, std::fstream &fsOut, int32_t iDelta )
     writeUint32 ( fsOut, size ( ) );
     fsOut.write ( m_name,  4 );
   }
+
   if ( content_start ( ) )
     fsIn.seekg ( content_start ( ) );
 
@@ -288,7 +289,7 @@ void Box::tag_copy ( std::fstream &fsIn, std::fstream &fsOut, int32_t iSize )
 
   //  On 32-bit systems reading / writing is limited to 2GB chunks.
   //  To prevent overflow, read/write 64 MB chunks.
-  int32_t block_size = 64 * 1024 * 1024;
+  int32_t block_size = 1 * 1024 * 1024;
   m_pContents = new uint8_t[block_size + 1];
   while ( iSize > block_size )  {
     fsIn.read   ( (char *)m_pContents, block_size );
@@ -297,6 +298,9 @@ void Box::tag_copy ( std::fstream &fsIn, std::fstream &fsOut, int32_t iSize )
   }
   fsIn.read   ( (char *)m_pContents, iSize );
   fsOut.write ( (char *)m_pContents, iSize );
+    if (m_pContents) {
+        delete m_pContents;
+    }
 }
 
 void Box::index_copy ( std::fstream &fsIn, std::fstream &fsOut, Box *pBox, bool bBigMode, int32_t iDelta )
